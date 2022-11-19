@@ -43,10 +43,10 @@ jobs:
         sudo git checkout -b tmp 459cfc5ba7fee40f8aa0a070966e373377668014
     - name: Build Firmware
       run: |
-        cd /opt/poky
-        source oe-init-build-env
+        cd /opt
+        source poky/oe-init-build-env
         sudo cp /opt/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
-        cd /opt/poky/build
+        cd /opt/build
         bitbake core-image-bsp
         cd /opt/
         sudo tar -czvf RZ-G2UL-images.tar.gz /opt/build/tmp/deploy/images/smarc-rzg2ul/*
