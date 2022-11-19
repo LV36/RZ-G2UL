@@ -48,7 +48,7 @@ jobs:
         cd ~/meta-virtualization
         git checkout -b tmp c5f61e547b90aa8058cf816f00902afed9c96f72
         cd ~/meta-renesas/docs/template/conf/smarc-rzg2ul/
-        cp ~/LV36/RZ-G2UL/local.conf ./local.conf
+        cp ~/RZ-G2UL/local.conf ./local.conf
     - name: Build Firmware
       run: |
         cd ~
