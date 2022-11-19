@@ -50,10 +50,9 @@ jobs:
       run: |
         cd ~
         source poky/oe-init-build-env
-        cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
-        cd ~
+        cd ~/meta-renesas/docs/template/conf/smarc-rzg2ul
         wget https://github.com/LV36/RZ-G2UL/blob/main/local.conf
-        cp ~/local.conf ./conf/.
+        cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
         cd ~/build
         bitbake core-image-bsp
         cd ~
