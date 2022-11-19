@@ -40,7 +40,7 @@ jobs:
         cd ~/meta-qt5
         git checkout -b tmp c1b0c9f546289b1592d7a895640de103723a0305
         cd ~/meta-renesas
-        git checkout -b tmp bce919ca18a1cd2e7b0d965a4b32c27ff0eb9a3a
+        git checkout -b tmp 459cfc5ba7fee40f8aa0a070966e373377668014
     - name: Build Firmware
       run: |
         cd ~
