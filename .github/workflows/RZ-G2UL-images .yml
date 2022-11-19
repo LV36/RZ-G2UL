@@ -32,6 +32,7 @@ jobs:
         git clone https://github.com/renesas-rz/meta-renesas.git
         git clone http://git.yoctoproject.org/meta-gplv2
         git clone https://github.com/meta-qt5/meta-qt5.git
+        git clone https://git.yoctoproject.org/git/meta-virtualization
         cd ~/poky
         git checkout dunfell-23.0.14
         git cherry-pick 9e444
