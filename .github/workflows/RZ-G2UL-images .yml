@@ -33,6 +33,7 @@ jobs:
         git clone http://git.yoctoproject.org/meta-gplv2
         git clone https://github.com/meta-qt5/meta-qt5.git
         git clone https://git.yoctoproject.org/git/meta-virtualization
+        git clone https://github.com/LV36/RZ-G2UL.git
         cd ~/poky
         git checkout dunfell-23.0.14
         git cherry-pick 9e444
@@ -46,13 +47,13 @@ jobs:
         git checkout -b tmp 459cfc5ba7fee40f8aa0a070966e373377668014
         cd ~/meta-virtualization
         git checkout -b tmp c5f61e547b90aa8058cf816f00902afed9c96f72
+        cd ~/meta-renesas/docs/template/conf/smarc-rzg2ul/
+        cp ~/LV36/RZ-G2UL/local.conf ./local.conf
     - name: Build Firmware
       run: |
         cd ~
-        source poky/oe-init-build-env
-        sudo cd ~/meta-renesas/docs/template/conf/smarc-rzg2ul
-        sudo wget https://github.com/LV36/RZ-G2UL/blob/main/local.conf
-        sudo cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        source poky/oe-init-build-env       
+        cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
         cd ~/build
         bitbake core-image-bsp
         cd ~
