@@ -26,30 +26,41 @@ jobs:
       run: |
         cd /opt
         sudo git clone git://git.yoctoproject.org/poky
-        sudo wget https://github.com/LV36/openwrt-ssd20x-toolchian/releases/download/2018.08/wt-gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tag.gz
-        sudo tar -xvf wt-gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tag.gz
-        sudo chmod 777 ~/.profile
-        echo -e '\nexport PATH=/opt/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf/bin:$PATH\n' >> ~/.profile
-        source ~/.profile
+        sudo git clone git://git.openembedded.org/meta-openembedded
+        sudo git clone https://github.com/renesas-rz/meta-renesas.git
+        sudo git clone http://git.yoctoproject.org/meta-gplv2
+        sudo git clone https://github.com/meta-qt5/meta-qt5.git
+        cd /opt/ooky
+        sudo git checkout dunfell-23.0.14
+        sudo git cherry-pick 9e444
+        cd /opt/meta-openembedded
+        sudo git checkout -b tmp ec978232732edbdd875ac367b5a9c04b881f2e19
+        cd /opt/meta-gplv2
+        sudo git checkout -b tmp 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
+        cd /opt/meta-qt5
+        sudo git checkout -b tmp c1b0c9f546289b1592d7a895640de103723a0305
+        cd /opt/meta-renesas
+        sudo git checkout -b tmp <tag>
+        sudo git tag
     - name: Build Firmware
       run: |
-        cd /opt/openwrt-ssd20x/18.06
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a -f
-        make WT2015_wt
-        make V=s -j4
         cd /opt
-        sudo tar -czvf Purple-Pi-R1-OpenWrt.tar.gz /opt/openwrt-ssd20x/18.06/bin/targets/sstar/ssd20x/WT2015/*
+        sudo source poky/oe-init-build-env
+        sudo cp /opt/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        cd /opt/build
+        sudo bitbake core-image-bsp
+        cd /opt/
+        sudo tar -czvf RZ-G2UL-images.tar.gz /opt/build/tmp/deploy/images/smarc-rzg2ul/*
     - name : Upload packages
       uses: actions/upload-artifact@master
       if: always()
       with:
-        name: Purple-Pi-R1-OpenWrt 
-        path: /opt/openwrt-ssd20x/18.06/bin/targets/sstar/ssd20x/WT2015
+        name: RZ-G2UL-images 
+        path: /opt/build/tmp/deploy/images/smarc-rzg2ul/
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: "Purple-Pi-R1-OpenWrt"
-        files: /opt/Purple-Pi-R1-OpenWrt.tar.gz
+        tag_name: "RZ-G2UL-images"
+        files: /opt/RZ-G2UL-images.tar.gz
