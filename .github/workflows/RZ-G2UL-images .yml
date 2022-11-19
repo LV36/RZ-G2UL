@@ -24,42 +24,42 @@ jobs:
         sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat cpio python2 python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping libsdl1.2-dev xterm p7zip-full libyaml-dev python3-git python3-jinja2 libegl1-mesa python3-subunit mesa-common-dev
     - name: Clone source code
       run: |
-        cd /opt
-        sudo git clone git://git.yoctoproject.org/poky
-        sudo git clone git://git.openembedded.org/meta-openembedded
-        sudo git clone https://github.com/renesas-rz/meta-renesas.git
-        sudo git clone http://git.yoctoproject.org/meta-gplv2
-        sudo git clone https://github.com/meta-qt5/meta-qt5.git
-        cd /opt/poky
-        sudo git checkout dunfell-23.0.14
-        sudo git cherry-pick 9e444
-        cd /opt/meta-openembedded
-        sudo git checkout -b tmp ec978232732edbdd875ac367b5a9c04b881f2e19
-        cd /opt/meta-gplv2
-        sudo git checkout -b tmp 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
-        cd /opt/meta-qt5
-        sudo git checkout -b tmp c1b0c9f546289b1592d7a895640de103723a0305
-        cd /opt/meta-renesas
-        sudo git checkout -b tmp 459cfc5ba7fee40f8aa0a070966e373377668014
+        cd /home
+        git clone git://git.yoctoproject.org/poky
+        git clone git://git.openembedded.org/meta-openembedded
+        git clone https://github.com/renesas-rz/meta-renesas.git
+        git clone http://git.yoctoproject.org/meta-gplv2
+        git clone https://github.com/meta-qt5/meta-qt5.git
+        cd /home/poky
+        git checkout dunfell-23.0.14
+        git cherry-pick 9e444
+        cd /home/meta-openembedded
+        git checkout -b tmp ec978232732edbdd875ac367b5a9c04b881f2e19
+        cd /home/meta-gplv2
+        git checkout -b tmp 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
+        cd /home/meta-qt5
+        git checkout -b tmp c1b0c9f546289b1592d7a895640de103723a0305
+        cd /home/meta-renesas
+        git checkout -b tmp bce919ca18a1cd2e7b0d965a4b32c27ff0eb9a3a
     - name: Build Firmware
       run: |
-        cd /opt
+        cd /home
         source poky/oe-init-build-env
-        sudo cp /opt/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
-        cd /opt/build
+        sudo cp /home/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        cd /home/build
         bitbake core-image-bsp
-        cd /opt/
-        sudo tar -czvf RZ-G2UL-images.tar.gz /opt/build/tmp/deploy/images/smarc-rzg2ul/*
+        cd /home/
+        sudo tar -czvf RZ-G2UL-images.tar.gz /home/build/tmp/deploy/images/smarc-rzg2ul/*
     - name : Upload packages
       uses: actions/upload-artifact@master
       if: always()
       with:
         name: RZ-G2UL-images 
-        path: /opt/build/tmp/deploy/images/smarc-rzg2ul/
+        path: /home/build/tmp/deploy/images/smarc-rzg2ul/
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: "RZ-G2UL-images"
-        files: /opt/RZ-G2UL-images.tar.gz
+        files: /home/RZ-G2UL-images.tar.gz
