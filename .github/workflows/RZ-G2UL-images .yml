@@ -40,8 +40,7 @@ jobs:
         cd /opt/meta-qt5
         sudo git checkout -b tmp c1b0c9f546289b1592d7a895640de103723a0305
         cd /opt/meta-renesas
-        sudo git checkout -b tmp <tag>
-        sudo git tag
+        sudo git checkout -b tmp 459cfc5ba7fee40f8aa0a070966e373377668014
     - name: Build Firmware
       run: |
         cd /opt
