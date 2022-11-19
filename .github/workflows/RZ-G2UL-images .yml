@@ -44,7 +44,7 @@ jobs:
     - name: Build Firmware
       run: |
         cd /opt
-        sudo source poky/oe-init-build-env
+        source poky/oe-init-build-env
         sudo cp /opt/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
         cd /opt/build
         sudo bitbake core-image-bsp
