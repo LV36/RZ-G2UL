@@ -49,7 +49,7 @@ jobs:
         cd /opt
         mkdir build
         cd /opt/build
-        sudo bitbake core-image-bsp
+        bitbake core-image-bsp
         cd /opt/
         sudo tar -czvf RZ-G2UL-images.tar.gz /opt/build/tmp/deploy/images/smarc-rzg2ul/*
     - name : Upload packages
