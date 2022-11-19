@@ -50,11 +50,14 @@ jobs:
       run: |
         cd ~
         source poky/oe-init-build-env
-        sudo cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        cd ~
+        wget https://github.com/LV36/RZ-G2UL/blob/main/local.conf
+        cp ~/local.conf ./conf/local.conf
         cd ~/build
         bitbake core-image-bsp
         cd ~
-        sudo tar -czvf RZ-G2UL-images.tar.gz /home/build/tmp/deploy/images/smarc-rzg2ul/*
+        tar -czvf RZ-G2UL-images.tar.gz /home/build/tmp/deploy/images/smarc-rzg2ul/*
     - name : Upload packages
       uses: actions/upload-artifact@master
       if: always()
