@@ -46,9 +46,7 @@ jobs:
         cd /opt/poky
         source oe-init-build-env
         sudo cp /opt/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
-        cd /opt
-        mkdir build
-        cd /opt/build
+        cd /opt/poky/build
         bitbake core-image-bsp
         cd /opt/
         sudo tar -czvf RZ-G2UL-images.tar.gz /opt/build/tmp/deploy/images/smarc-rzg2ul/*
