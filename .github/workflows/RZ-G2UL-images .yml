@@ -46,6 +46,8 @@ jobs:
         cd /opt/poky
         source oe-init-build-env
         sudo cp /opt/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        cd /opt
+        mkdir build
         cd /opt/build
         sudo bitbake core-image-bsp
         cd /opt/
