@@ -53,7 +53,7 @@ jobs:
         cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
         cd ~
         wget https://github.com/LV36/RZ-G2UL/blob/main/local.conf
-        cp ~/local.conf ./conf/local.conf
+        cp ~/local.conf ./conf/.
         cd ~/build
         bitbake core-image-bsp
         cd ~
