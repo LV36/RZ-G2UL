@@ -1,0 +1,74 @@
+name: RZ-G2UL-SDK 云编译
+
+on: 
+  repository_dispatch:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    tags:
+    - 'v*'   
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo apt-get update && sudo apt-get full-upgrade -y && sudo apt-get upgrade -y && sudo apt-get autoremove -y
+        sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat cpio python2 python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping libsdl1.2-dev xterm p7zip-full libyaml-dev python3-git python3-jinja2 libegl1-mesa python3-subunit mesa-common-dev
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+    - name: Clone source code
+      run: |
+        cd ~
+        git clone git://git.yoctoproject.org/poky
+        git clone git://git.openembedded.org/meta-openembedded
+        git clone https://github.com/renesas-rz/meta-renesas.git
+        git clone http://git.yoctoproject.org/meta-gplv2
+        git clone https://github.com/meta-qt5/meta-qt5.git
+        git clone https://git.yoctoproject.org/git/meta-virtualization
+        git clone https://github.com/LV36/RZ-G2UL.git
+        cd ~/poky
+        git checkout dunfell-23.0.14
+        git cherry-pick 9e444
+        cd ~/meta-openembedded
+        git checkout -b tmp ec978232732edbdd875ac367b5a9c04b881f2e19
+        cd ~/meta-gplv2
+        git checkout -b tmp 60b251c25ba87e946a0ca4cdc8d17b1cb09292ac
+        cd ~/meta-qt5
+        git checkout -b tmp c1b0c9f546289b1592d7a895640de103723a0305
+        cd ~/meta-renesas
+        git checkout -b tmp 459cfc5ba7fee40f8aa0a070966e373377668014
+        cd ~/meta-virtualization
+        git checkout -b tmp c5f61e547b90aa8058cf816f00902afed9c96f72
+        cd ~/meta-renesas/docs/template/conf/smarc-rzg2ul/
+        cp ~/RZ-G2UL/local.conf ./local.conf
+    - name: Build Firmware
+      run: |
+        cd ~
+        source poky/oe-init-build-env       
+        cp ~/meta-renesas/docs/template/conf/smarc-rzg2ul/*.conf ./conf/.
+        cd ~/build
+        bitbake core-image-weston -c populate_sdk
+        cd ~
+        sudo tar -czvf RZ-G2UL-SDK.tar.gz ~/build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-weston-aarch64-smarc-rzg2ul-toolchain-3.1.14.sh
+
+    - name : Upload packages
+      uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: RZ-G2UL-SDK 
+        path: ~/build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-weston-aarch64-smarc-rzg2ul-toolchain-3.1.14.sh
+    - name: Upload firmware to release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "RZ-G2UL-SDK"
+        files: ~/RZ-G2UL-SDK.tar.gz
