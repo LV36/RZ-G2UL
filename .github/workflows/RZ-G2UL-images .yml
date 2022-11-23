@@ -57,7 +57,7 @@ jobs:
         cd ~/build
         bitbake core-image-bsp
         cd ~
-        sudo tar -czvf RZ-G2UL-images.tar.gz /home/build/tmp/deploy/images/smarc-rzg2ul/*
+        sudo tar -czvf RZ-G2UL-images.tar.gz ~/build/tmp/deploy/images/smarc-rzg2ul/*
     - name : Upload packages
       uses: actions/upload-artifact@master
       if: always()
